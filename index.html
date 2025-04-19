@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mahjong Soul Currency Link Checker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem;
+      background-color: #f8f8f8;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-family: monospace;
+      margin-bottom: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: left;
+    }
+    th {
+      background-color: #eee;
+    }
+    .missing {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Currency Link Checker</h1>
+  <p>Paste your wiki.gg HTML or wikitext content below. The tool will list out non-existent links.</p>
+  <textarea id="input"></textarea>
+  <button onclick="checkLinks()">Check Links</button>
+
+  <table id="results" style="display:none">
+    <thead>
+      <tr><th>Page</th><th>Nonexistent Link</th></tr>
+    </thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+
+  <script>
+    const existingPages = [
+      "Currency", "Copper", "Jade", "Summon Scroll", "Star Dust",
+      "Outfit Voucher", "Wishing Stone", "Faith", "Star Stone", "Spheres", "Gifts"
+    ];
+
+    function checkLinks() {
+      const input = document.getElementById("input").value;
+      const regex = /\[\[(.*?)\]\]/g;
+      const found = [...input.matchAll(regex)].map(match => match[1].split('|')[0].trim());
+
+      const missing = found.filter(page => !existingPages.includes(page));
+      const tbody = document.getElementById("resultsBody");
+      tbody.innerHTML = "";
+
+      missing.forEach(page => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>Manual Entry</td><td class="missing">${page}</td>`;
+        tbody.appendChild(row);
+      });
+
+      document.getElementById("results").style.display = missing.length ? 'table' : 'none';
+    }
+  </script>
+</body>
+</html>
